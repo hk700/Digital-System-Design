@@ -1,0 +1,30 @@
+module lab4(input logic clk,
+input logic reset,
+input logic left, right,
+output logic la, lb, lc, ra, rb, rc);
+logic s0, l1, l2, l3, r1, r2, r3;
+logic s0next, l1next, l2next, l3next, r1next, r2next, r3next;
+assign s0next = reset | (s0 & ((left & right) | (~left & ~right))) | l3 | r3;
+assign l1next = ~reset & left & ~right & s0;
+assign l2next = ~reset & l1;
+assign l3next = ~reset & l2;
+assign r1next = ~reset & ~left & right & s0;
+assign r2next = ~reset & r1;
+assign r3next = ~reset & r2;
+always_ff@(posedge clk)
+begin
+s0 <= s0next;
+l1 <= l1next;
+l2 <= l2next;
+l3 <= l3next;
+r1 <= r1next;
+r2 <= r2next;
+r3 <= r3next;
+end
+assign la = l1 | l2 | l3;
+assign lb = l2 | l3;
+assign lc = l3;
+assign ra = r1 | r2 | r3;
+assign rb = r2 | r3;
+assign rc = r3;
+endmodule
